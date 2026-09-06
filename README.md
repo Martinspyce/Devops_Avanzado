@@ -33,7 +33,7 @@ Requiere **JDK 17** y Maven (o usar el wrapper incluido `./mvnw` / `.\mvnw.cmd`)
 
 ---
 
-## 📁 Estructura del Repositorio
+## Estructura del Repositorio
 
 ```
 bdget/
@@ -60,7 +60,7 @@ bdget/
 
 ---
 
-## 🌳 Estrategia de Ramificación
+##  Estrategia de Ramificación
 
 ### Comparativa de Estrategias de Control de Versiones
 
@@ -95,13 +95,13 @@ El equipo utilizará la estrategia **GitFlow**.
 
 ### JUSTIFICACIÓN DEL EQUIPO - COMPLETAR MANUALMENTE
 
-> ✏️ **A COMPLETAR POR LOS INTEGRANTES:**
+>  **A COMPLETAR POR LOS INTEGRANTES:**
 >
 > Indiquen aquí la justificación técnica específica acordada por el equipo para la elección de GitFlow en este proyecto (por ejemplo: justificar considerando la separación entre código estable y desarrollo en curso, el tamaño del equipo de 2 personas, el control estricto de entregas para la evaluación parcial, etc.).
 
 ---
 
-## 🔀 Convenciones de Naming de Ramas
+##  Convenciones de Naming de Ramas
 
 Para garantizar la consistencia en el repositorio, todas las ramas deben cumplir con las siguientes reglas:
 - Utilizar letras **minúsculas**.
@@ -121,7 +121,7 @@ Para garantizar la consistencia en el repositorio, todas las ramas deben cumplir
 
 ---
 
-## 📝 Convenciones de Commits (Conventional Commits)
+##  Convenciones de Commits (Conventional Commits)
 
 Los mensajes de commit deben seguir la especificación de **Conventional Commits** para mantener un historial limpio, legible y automatizable.
 
@@ -148,7 +148,7 @@ Los mensajes de commit deben seguir la especificación de **Conventional Commits
 
 ---
 
-## 🛠️ Simulación de Desarrollo Colaborativo
+##  Simulación de Desarrollo Colaborativo
 
 Para la Evaluación Parcial, el proyecto cuenta con los siguientes cambios preparados en el microservicio:
 
@@ -163,7 +163,7 @@ Para la Evaluación Parcial, el proyecto cuenta con los siguientes cambios prepa
 
 ---
 
-## 🔍 Estrategia de Code Review y Pull Requests
+##  Estrategia de Code Review y Pull Requests
 
 ### Importancia de los Pull Requests
 Los Pull Requests son el mecanismo central de control de calidad y colaboración. Permiten:
@@ -177,7 +177,7 @@ Los Pull Requests son el mecanismo central de control de calidad y colaboración
 1. El proyecto debe **compilar limpiamente** sin errores de construcción.
 2. Todos los **tests unitarios y de integración deben pasar (100% exitosos)**.
 3. No deben existir **conflictos de fusión** con la rama destino.
-4. El PR debe incluir una **descripción clara** del cambio realizado utilizando la plantilla `.github/PULL_REQUEST_TEMPLATE.md`.
+4. El PR debe incluir una **descripción clara** del cambio realizado utilizando la plantilla `.github/pull_request`.
 5. Debe contar con la aprobación explícita de **otro integrante del equipo**.
 6. Evitar commits innecesarios o desordenados (limpiar historial si corresponde).
 7. Verificar efectivamente que **no se incluyan credenciales, contraseñas ni secretos**.
@@ -185,7 +185,7 @@ Los Pull Requests son el mecanismo central de control de calidad y colaboración
 
 ---
 
-## ⚙️ Automatización y Pipeline CI/CD
+##  Automatización y Pipeline CI/CD
 
 El repositorio cuenta con un workflow de automatización en `.github/workflows/main.yml` configurado con GitHub Actions.
 
@@ -222,7 +222,7 @@ El repositorio cuenta con un workflow de automatización en `.github/workflows/m
 
 ---
 
-## 🐳 Docker (Preparación para Despliegue)
+##  Docker (Preparación para Despliegue)
 
 El proyecto incluye un `Dockerfile` optimizado utilizando **multi-stage build** para mantener la imagen ligera y segura, alineada a **Java 17**.
 
@@ -249,7 +249,7 @@ La aplicación quedará accesible en `http://localhost:8012/students`.
 - `git add`: Prepara los archivos modificados para el próximo commit.
 - `git commit`: Guarda el estado de los cambios en el historial local.
 - `git push`: Sube los commits locales a la rama remota en GitHub.
-- `git merge`: Fusiona los cambios de una rama en otra.
+- `git merge`: Fusiona los cambios de una rama en otra, ademas ocupamos el prefijo --no-ff para ver cada cambio realizado
 
 ### Ejemplo Completo de Desarrollo de una Feature:
 
@@ -320,20 +320,9 @@ Se recomienda configurar **Branch Protection Rules** en GitHub para resguardar l
 
 ---
 
-## Uso de herramientas de Inteligencia Artificial
 
-Herramienta:
-[COMPLETAR POR EL EQUIPO]
+## Autores
 
-Uso realizado:
-[COMPLETAR POR EL EQUIPO]
-
-Contenido revisado y validado por:
-[COMPLETAR POR EL EQUIPO]
-
----
-
-## 👥 Autores
-
-- [COMPLETAR NOMBRE INTEGRANTE 1]
-- [COMPLETAR NOMBRE INTEGRANTE 2]
+- [Martin Gauna]
+- [Bastian Garrido]
+- [Jose Concha]
