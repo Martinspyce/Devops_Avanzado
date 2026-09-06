@@ -33,6 +33,7 @@ class StudentServiceImplTest {
         student = new Student();
         student.setId(1L);
         student.setName("John");
+        student.setEmail("john@example.com");
     }
 
     @Test
@@ -46,6 +47,13 @@ class StudentServiceImplTest {
     void testGetStudentById() {
         when(repository.findById(1L)).thenReturn(Optional.of(student));
         assertEquals(Optional.of(student), service.getStudentById(1L));
+    }
+
+    @Test
+    void testGetStudentsByName() {
+        List<Student> expected = Arrays.asList(student);
+        when(repository.findByNameContainingIgnoreCase("John")).thenReturn(expected);
+        assertEquals(expected, service.getStudentsByName("John"));
     }
 
     @Test

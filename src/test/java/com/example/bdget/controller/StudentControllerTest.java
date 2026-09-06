@@ -38,6 +38,7 @@ class StudentControllerTest {
         student = new Student();
         student.setId(1L);
         student.setName("John");
+        student.setEmail("john@example.com");
     }
 
     @Test
@@ -57,6 +58,14 @@ class StudentControllerTest {
     }
 
     @Test
+    void testGetStudentsByName() throws Exception {
+        when(service.getStudentsByName("John")).thenReturn(Arrays.asList(student));
+        mockMvc.perform(get("/students/search").param("name", "John"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(Arrays.asList(student))));
+    }
+
+    @Test
     void testCreateStudent() throws Exception {
         when(service.createStudent(any(Student.class))).thenReturn(student);
         mockMvc.perform(post("/students")
@@ -64,6 +73,18 @@ class StudentControllerTest {
                 .content(mapper.writeValueAsString(student)))
                 .andExpect(status().isOk())
                 .andExpect(content().json(mapper.writeValueAsString(student)));
+    }
+
+    @Test
+    void testCreateStudentInvalidEmail() throws Exception {
+        Student invalidStudent = new Student();
+        invalidStudent.setName("John");
+        invalidStudent.setEmail("invalid-email-format");
+
+        mockMvc.perform(post("/students")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(invalidStudent)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
