@@ -6,7 +6,7 @@ Este repositorio corresponde a la **Evaluación Parcial N°1 de Ingeniería DevO
 
 ---
 
-## 🚀 Cómo levantar el proyecto localmente
+##  Cómo levantar el proyecto localmente
 
 Requiere **JDK 17** y Maven (o usar el wrapper incluido `./mvnw` / `.\mvnw.cmd`).
 

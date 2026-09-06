@@ -1,10 +1,8 @@
 # Guía de Contribución al Proyecto `bdget` 🎓
 
-¡Bienvenido a la guía de contribución del microservicio **bdget**! Este documento describe el flujo de trabajo colaborativo que el equipo (Martin Gauna, Bastián Garrido y José Concha) sigue para mantener la calidad del software.
-
 ---
 
-## 🔄 Flujo de Trabajo para Contribuir (Paso a Paso)
+##  Flujo de Trabajo para Contribuir (Paso a Paso)
 
 1. **Instalar Git y Clonar el repositorio:**
    ```bash

@@ -1,10 +1,10 @@
-# 🚀 Levantamiento de la Aplicación y Guía de Trabajo
+#  Levantamiento de la Aplicación y Guía de Trabajo
 
 Esta guía explica paso a paso cómo clonar, configurar, ejecutar y desplegar localmente el microservicio REST **bdget** en puerto `8012`, además del flujo colaborativo con GitFlow y la regla `--no-ff`.
 
 ---
 
-## 🛠️ Requisitos Previos
+##  Requisitos Previos
 
 - **JDK 17** instalado y configurado en el sistema.
 - **Git** instalado.
@@ -12,7 +12,7 @@ Esta guía explica paso a paso cómo clonar, configurar, ejecutar y desplegar lo
 
 ---
 
-## 🚀 Pasos para Levantamiento Local
+##  Pasos para Levantamiento Local
 
 ### 1. Clonar e ingresar al repositorio
 ```bash
@@ -39,7 +39,7 @@ El proyecto incluye el Maven Wrapper (`./mvnw` en Linux/Mac o `.\mvnw.cmd` en Wi
 
 ---
 
-## 🧪 Pruebas Automatizadas y Verificación
+##  Pruebas Automatizadas y Verificación
 
 ```bash
 # Pruebas unitarias
@@ -51,7 +51,7 @@ El proyecto incluye el Maven Wrapper (`./mvnw` en Linux/Mac o `.\mvnw.cmd` en Wi
 
 ---
 
-## 🐳 Levantamiento con Docker
+##  Levantamiento con Docker
 
 ```bash
 # Construir la imagen local en puerto 8012
@@ -63,7 +63,7 @@ docker run --rm -p 8012:8012 bdget
 
 ---
 
-## 🌳 Flujo de Ramificación GitFlow (con `--no-ff`)
+##  Flujo de Ramificación GitFlow (con `--no-ff`)
 
 Para mantener la trazabilidad completa en el grafo de commits, **cada merge debe realizarse utilizando el parámetro `--no-ff`**:
 
