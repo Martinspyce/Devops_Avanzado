@@ -21,6 +21,11 @@ public class Student {
     @Column(name= "name")
     private String name;
 
+    @NotBlank(message = "El email no puede estar vacio")
+    @Email(message = "Debe ingresar un formato de email valido")
+    @Column(name = "email")
+    private String email;
+
     //Getters and setters
     public Long getId() {
         return id;
@@ -30,12 +35,20 @@ public class Student {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

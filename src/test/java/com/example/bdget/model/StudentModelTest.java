@@ -10,7 +10,9 @@ class StudentModelTest {
         Student student = new Student();
         student.setId(1L);
         student.setName("John");
+        student.setEmail("john@example.com");
         assertEquals(1L, student.getId());
         assertEquals("John", student.getName());
+        assertEquals("john@example.com", student.getEmail());
     }
 }
