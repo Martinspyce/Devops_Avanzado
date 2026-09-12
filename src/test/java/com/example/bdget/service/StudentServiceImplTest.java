@@ -58,6 +58,13 @@ class StudentServiceImplTest {
     }
 
     @Test
+    void testGetStudentsByEmail() {
+        List<Student> expected = Arrays.asList(student);
+        when(repository.findByEmailIgnoreCase("john@example.com")).thenReturn(expected);
+        assertEquals(expected, service.getStudentsByEmail("john@example.com"));
+    }
+
+    @Test
     void testCreateStudent() {
         when(repository.save(student)).thenReturn(student);
         assertEquals(student, service.createStudent(student));

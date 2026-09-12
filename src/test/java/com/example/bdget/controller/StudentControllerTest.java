@@ -67,6 +67,14 @@ class StudentControllerTest {
     }
 
     @Test
+    void testGetStudentsByEmail() throws Exception {
+        when(service.getStudentsByEmail("john@example.com")).thenReturn(Arrays.asList(student));
+        mockMvc.perform(get("/students/search/email").param("email", "john@example.com"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(mapper.writeValueAsString(Arrays.asList(student))));
+    }
+
+    @Test
     void testCreateStudent() throws Exception {
         when(service.createStudent(any(Student.class))).thenReturn(student);
         mockMvc.perform(post("/students")

@@ -29,6 +29,11 @@ public class StudentServiceImpl implements StudentService{
     public List<Student> getStudentsByName(String name) {
         return studentRepository.findByNameContainingIgnoreCase(name);
     }
+
+    @Override
+    public List<Student> getStudentsByEmail(String email) {
+        return studentRepository.findByEmailIgnoreCase(email);
+    }
     
     @Override
     public Student createStudent(Student student){
