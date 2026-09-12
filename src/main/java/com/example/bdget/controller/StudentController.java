@@ -47,6 +47,11 @@ public class StudentController {
         return studentService.getStudentsByName(name);
     }
 
+    @GetMapping("/search/email")
+    public List<Student> getStudentsByEmail(@RequestParam String email) {
+        return studentService.getStudentsByEmail(email);
+    }
+
     @PostMapping
     public Student createStudent(@Valid @RequestBody Student student) {
         return studentService.createStudent(student);
