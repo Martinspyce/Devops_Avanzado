@@ -45,6 +45,12 @@ class StudentServiceImplTest {
     }
 
     @Test
+    void testCountStudents() {
+        when(repository.count()).thenReturn(3L);
+        assertEquals(3L, service.countStudents());
+    }
+
+    @Test
     void testGetStudentById() {
         when(repository.findById(1L)).thenReturn(Optional.of(student));
         assertEquals(Optional.of(student), service.getStudentById(1L));
