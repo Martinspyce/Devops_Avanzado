@@ -1,46 +1,68 @@
-name: CI/CD bdget
+name: CI/CD bdget Pipeline
 
 on:
   push:
     branches:
       - develop
+      - main
   pull_request:
     branches:
+      - develop
       - main
 
 jobs:
-  test:
-    if: github.ref == 'refs/heads/develop'
+  validate:
+    name: Pruebas y Verificación Maven
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout del código fuente
+        uses: actions/checkout@v4
 
-      - name: Configurar JDK 17
+      - name: Configurar JDK 17 (Temurin)
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'maven'
 
-      - name: Ejecutar pruebas
-        run: ./mvnw test
+      - name: Ejecutar pruebas unitarias
+        run: ./mvnw clean test
 
-  build:
-    if: github.event_name == 'pull_request'
+      - name: Ejecutar verificación completa (verify)
+        run: ./mvnw verify
+
+  package:
+    name: Build y Artefactos (PR a Main)
+    needs: validate
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout del código fuente
+        uses: actions/checkout@v4
 
-      - name: Configurar JDK 17
+      - name: Configurar JDK 17 (Temurin)
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'maven'
 
-      - name: Compilar y empaquetar (sin ejecutar tests, ya corrieron en develop)
+      - name: Compilar y empaquetar aplicación
         run: ./mvnw clean package -DskipTests
 
-      - name: Subir artefacto generado
+      - name: Subir artefacto JAR a GitHub Actions
         uses: actions/upload-artifact@v4
         with:
-          name: bdget-jar
+          name: bdget-jar-${{ github.sha }}
           path: target/*.jar
+
+  docker-build:
+    name: Simulación Build de Imagen Docker
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código fuente
+        uses: actions/checkout@v4
+
+      - name: Construir imagen Docker de prueba
+        run: docker build -t bdget:${{ github.sha }} .

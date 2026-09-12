@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/students")
 @CrossOrigin(origins = "*")
@@ -40,13 +42,18 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
+    @GetMapping("/search")
+    public List<Student> getStudentsByName(@RequestParam String name) {
+        return studentService.getStudentsByName(name);
+    }
+
     @PostMapping
-    public Student creaStudent(@RequestBody Student student) {
+    public Student createStudent(@Valid @RequestBody Student student) {
         return studentService.createStudent(student);
     }
     
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestBody Student student) {
+    public Student updateStudent(@PathVariable Long id, @Valid @RequestBody Student student) {
         return studentService.updateStudent(id, student);
     }
 
