@@ -93,11 +93,13 @@ El equipo utilizará la estrategia **GitFlow**.
 
 ---
 
-### JUSTIFICACIÓN DEL EQUIPO - COMPLETAR MANUALMENTE
+### Justificación técnica de GitFlow
 
->  **A COMPLETAR POR LOS INTEGRANTES:**
->
-> Indiquen aquí la justificación técnica específica acordada por el equipo para la elección de GitFlow en este proyecto (por ejemplo: justificar considerando la separación entre código estable y desarrollo en curso, el tamaño del equipo de 2 personas, el control estricto de entregas para la evaluación parcial, etc.).
+El equipo seleccionó **GitFlow** porque el proyecto necesita mantener una versión estable y demostrable en `main` mientras las funcionalidades y correcciones se integran de forma controlada en `develop`. Esta separación reduce el riesgo de que cambios en desarrollo afecten la versión preparada para entrega o despliegue.
+
+Las ramas `feature/*` permiten que los integrantes trabajen en tareas acotadas de forma independiente y las integren mediante Pull Requests, con revisión por pares y validación de CI antes de llegar a `develop`. Para correcciones urgentes, las ramas `hotfix/*` permiten reparar `main` y propagar el ajuste a `develop`, evitando que ambas líneas de trabajo queden desalineadas.
+
+Aunque GitFlow implica gestionar más fusiones, esa disciplina es adecuada para un equipo pequeño, una evaluación con entregas formales y un microservicio que requiere trazabilidad de los cambios, pruebas automatizadas y una rama principal siempre estable.
 
 ---
 

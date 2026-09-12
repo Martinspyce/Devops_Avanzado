@@ -1,8 +1,5 @@
 package com.example.bdget.exception;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +11,16 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(StudentNotFoundException.class)
+    public ResponseEntity<Object> handleStudentNotFound(StudentNotFoundException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("message", ex.getMessage());
+        response.put("status", HttpStatus.NOT_FOUND.value());
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
     
     //Excepcion Personalizada
     @ExceptionHandler(RuntimeException.class)
