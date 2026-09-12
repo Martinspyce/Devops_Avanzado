@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import com.example.bdget.model.Student;
 import com.example.bdget.service.StudentService;
+import com.example.bdget.exception.StudentNotFoundException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -102,5 +103,13 @@ class StudentControllerTest {
         mockMvc.perform(delete("/students/1"))
                 .andExpect(status().isOk());
         verify(service).deleteStudent(1L);
+    }
+
+    @Test
+    void testDeleteStudentNotFound() throws Exception {
+        doThrow(new StudentNotFoundException(99L)).when(service).deleteStudent(99L);
+
+        mockMvc.perform(delete("/students/99"))
+                .andExpect(status().isNotFound());
     }
 }
