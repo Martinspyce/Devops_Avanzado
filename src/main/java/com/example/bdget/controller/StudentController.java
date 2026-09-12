@@ -36,6 +36,11 @@ public class StudentController {
     public List<Student> getAllStudents(){
         return studentService.getAllStudents();
     }
+
+    @GetMapping("/count")
+    public long countStudents() {
+        return studentService.countStudents();
+    }
         
     @GetMapping("/{id}")
     public Optional<Student> getStudentById(@PathVariable Long id) {

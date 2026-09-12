@@ -162,6 +162,8 @@ Para la Evaluación Parcial, el proyecto cuenta con los siguientes cambios prepa
    - Pruebas unitarias asociadas en el modelo, servicio y controlador.
 3. **HOTFIX (`hotfix/corregir-validacion-estudiante`):**
    - Corrección del método `creaStudent` a `createStudent` e inclusión de la anotación `@Valid` en los endpoints `@PostMapping` y `@PutMapping` de `StudentController` para asegurar la aplicación de validaciones al recibir peticiones HTTP.
+4. **FEATURE 3 (`feature/contar-estudiantes`):**
+   - Añade el endpoint `GET /students/count` para obtener la cantidad total de estudiantes registrados.
 
 ---
 

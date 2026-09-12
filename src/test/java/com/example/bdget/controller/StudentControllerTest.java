@@ -51,6 +51,14 @@ class StudentControllerTest {
     }
 
     @Test
+    void testCountStudents() throws Exception {
+        when(service.countStudents()).thenReturn(1L);
+        mockMvc.perform(get("/students/count"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("1"));
+    }
+
+    @Test
     void testGetStudentById() throws Exception {
         when(service.getStudentById(1L)).thenReturn(Optional.of(student));
         mockMvc.perform(get("/students/1"))

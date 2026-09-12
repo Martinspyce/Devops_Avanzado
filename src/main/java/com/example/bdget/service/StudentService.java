@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface StudentService {
     List<Student> getAllStudents();
+    long countStudents();
     Optional<Student> getStudentById(Long id);
     List<Student> getStudentsByName(String name);
     Student createStudent(Student student);
