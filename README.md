@@ -95,11 +95,7 @@ El equipo utilizará la estrategia **GitFlow**.
 
 ### Justificación técnica de GitFlow
 
-El equipo seleccionó **GitFlow** porque el proyecto necesita mantener una versión estable y demostrable en `main` mientras las funcionalidades y correcciones se integran de forma controlada en `develop`. Esta separación reduce el riesgo de que cambios en desarrollo afecten la versión preparada para entrega o despliegue.
-
-Las ramas `feature/*` permiten que los integrantes trabajen en tareas acotadas de forma independiente y las integren mediante Pull Requests, con revisión por pares y validación de CI antes de llegar a `develop`. Para correcciones urgentes, las ramas `hotfix/*` permiten reparar `main` y propagar el ajuste a `develop`, evitando que ambas líneas de trabajo queden desalineadas.
-
-Aunque GitFlow implica gestionar más fusiones, esa disciplina es adecuada para un equipo pequeño, una evaluación con entregas formales y un microservicio que requiere trazabilidad de los cambios, pruebas automatizadas y una rama principal siempre estable.
+Gitflow aporta una estructura al proyecto por ejemplo lo de las ramas (main, develop) y ademas facilita el trabajo colaborativo
 
 ---
 
@@ -348,7 +344,6 @@ Herramienta utilizada: **Claude (Anthropic)**, a través de Claude Code en VS Co
 Se usó para:
 - Diagnosticar el error del pipeline (el archivo `mvnw` no tenía permiso de ejecución) y corregirlo (PR #1).
 - Hacer el merge de `develop` en `main` y abrir Pull Requests.
-- Redactar un borrador de la sección "Justificación técnica de GitFlow" (PR #1).
 - Implementar la búsqueda por email y sus pruebas (PR #5).
 - Corregir inconsistencias entre el README, la guía de contribución y la plantilla de PR.
 
@@ -363,16 +358,13 @@ Cita: Anthropic. (2026). *Claude* (versión Opus 5) [Modelo de lenguaje de gran 
 > Cada integrante escribe su reflexión sin apoyo de IA, como exige la pauta.
 
 ### Martín Gauna
-_Pendiente._
-<!-- Preguntas guía: ¿Qué aprendiste sobre GitFlow, Pull Requests o GitHub Actions? ¿Qué te costó más? ¿Qué aportaste al repositorio? ¿Qué harías distinto la próxima vez? -->
+Me di cuenta que un pequeño error puede parar el proyecto, nos faltaba un permiso (mvnw) que puede paralizar el pipeline
 
 ### Bastián Garrido
-_Pendiente._
-<!-- Preguntas guía: ¿Qué aprendiste sobre GitFlow, Pull Requests o GitHub Actions? ¿Qué te costó más? ¿Qué aportaste al repositorio? ¿Qué harías distinto la próxima vez? -->
+entendi que no debiamos trabajar todo en una misma rama, en este caso main y develop por que podemos hacer algo mal y eso pasara directo a produccion, en un caso real podriamos quedar sin trabajo por un error grande.
 
 ### José Concha
-_Pendiente._
-<!-- Preguntas guía: ¿Qué aprendiste sobre GitFlow, Pull Requests o GitHub Actions? ¿Qué te costó más? ¿Qué aportaste al repositorio? ¿Qué harías distinto la próxima vez? -->
+Aprendi que es mejor trabajar en ramas separadas que solo en una
 
 ---
 
