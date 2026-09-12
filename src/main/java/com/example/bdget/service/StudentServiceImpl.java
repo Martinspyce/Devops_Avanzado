@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.bdget.model.Student;
 import com.example.bdget.repository.StudentRepository;
+import com.example.bdget.exception.StudentNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,9 @@ public class StudentServiceImpl implements StudentService{
 
     @Override
     public void deleteStudent(Long id){
+        if (!studentRepository.existsById(id)) {
+            throw new StudentNotFoundException(id);
+        }
         studentRepository.deleteById(id);
     }
 }

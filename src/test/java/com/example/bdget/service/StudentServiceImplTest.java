@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.bdget.model.Student;
 import com.example.bdget.repository.StudentRepository;
+import com.example.bdget.exception.StudentNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
@@ -81,7 +82,16 @@ class StudentServiceImplTest {
 
     @Test
     void testDeleteStudent() {
+        when(repository.existsById(1L)).thenReturn(true);
         service.deleteStudent(1L);
         verify(repository).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteStudentNotExists() {
+        when(repository.existsById(1L)).thenReturn(false);
+
+        assertThrows(StudentNotFoundException.class, () -> service.deleteStudent(1L));
+        verify(repository, never()).deleteById(anyLong());
     }
 }
