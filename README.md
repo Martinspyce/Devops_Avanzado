@@ -40,7 +40,7 @@ bdget/
 ├── .github/
 │   ├── workflows/
 │   │   └── main.yml               → Workflow CI/CD en GitHub Actions
-│   └── PULL_REQUEST_TEMPLATE.md   → Plantilla estandarizada para Pull Requests
+│   └── pull_request_template.md   → Plantilla estandarizada para Pull Requests
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/bdget/
@@ -154,7 +154,7 @@ Los mensajes de commit deben seguir la especificación de **Conventional Commits
 
 Para la Evaluación Parcial, el proyecto cuenta con los siguientes cambios preparados en el microservicio:
 
-1. **FEATURE 1 (`feature/busqueda-estudiante`):**
+1. **FEATURE 1 (`feature/busqueda-estudiante-nombre`):**
    - Implementación de la búsqueda de estudiantes por coincidencia de nombre (case-insensitive).
    - Incluye método en `StudentRepository`, `StudentService`, endpoint `GET /students/search?name=...` en `StudentController` y pruebas unitarias correspondientes.
 2. **FEATURE 2 (`feature/validacion-email`):**
@@ -179,7 +179,7 @@ Los Pull Requests son el mecanismo central de control de calidad y colaboración
 1. El proyecto debe **compilar limpiamente** sin errores de construcción.
 2. Todos los **tests unitarios y de integración deben pasar (100% exitosos)**.
 3. No deben existir **conflictos de fusión** con la rama destino.
-4. El PR debe incluir una **descripción clara** del cambio realizado utilizando la plantilla `.github/pull_request`.
+4. El PR debe incluir una **descripción clara** del cambio realizado utilizando la plantilla `.github/pull_request_template.md` (GitHub la carga automáticamente al abrir el PR).
 5. Debe contar con la aprobación explícita de **otro integrante del equipo**.
 6. Evitar commits innecesarios o desordenados (limpiar historial si corresponde).
 7. Verificar efectivamente que **no se incluyan credenciales, contraseñas ni secretos**.
@@ -251,7 +251,7 @@ La aplicación quedará accesible en `http://localhost:8012/students`.
 - `git add`: Prepara los archivos modificados para el próximo commit.
 - `git commit`: Guarda el estado de los cambios en el historial local.
 - `git push`: Sube los commits locales a la rama remota en GitHub.
-- `git merge`: Fusiona los cambios de una rama en otra, ademas ocupamos el prefijo --no-ff para ver cada cambio realizado
+- `git merge`: Fusiona los cambios de una rama en otra. En el equipo los merges se hacen desde el Pull Request en GitHub, que crea un merge commit (igual que `--no-ff`), así cada cambio queda registrado en el historial.
 
 ### Ejemplo Completo de Desarrollo de una Feature:
 
@@ -261,7 +261,7 @@ git checkout develop
 git pull origin develop
 
 # 2. Crear nueva rama especificando el tipo feature y la función realizada
-git checkout -b feature-busqueda-estudiante
+git checkout -b feature/busqueda-estudiante-nombre
 
 # 3. Realizar cambios en el código y verificar ejecuciones locales
 ./mvnw clean test
@@ -271,11 +271,30 @@ git add .
 git commit -m "feat: agrega búsqueda de estudiantes por nombre"
 
 # 5. Hacer push al repositorio remoto asociando la rama a la función implementada
-git push -u origin feature-busqueda-estudiante
+git push -u origin feature/busqueda-estudiante-nombre
 
 # 6. Crear el Pull Request en la interfaz de GitHub:
-#    Origen: feature-busqueda-estudiante -> Destino: develop
+#    Origen: feature/busqueda-estudiante-nombre -> Destino: develop
 ```
+
+### Historial real de integraciones
+
+Este es el registro de cómo entró cada cambio al repositorio (se puede revisar en `git log --graph` y en la pestaña Pull Requests):
+
+| Cambio | Rama | Cómo se integró | Autor |
+|---|---|---|---|
+| Búsqueda de estudiantes por nombre | `feature/busqueda-estudiante-nombre` | Merge local a `develop` (`8c1fa89`) | Martín |
+| Validación de email | `feature/validacion-email` | Merge local a `develop` (`c10e8a4`) | Martín |
+| Corrige validación de estudiante | `hotfix/corregir-validacion-estudiante` | Merge local a `develop` (`b7c16c7`) | Martín |
+| Primera versión estable | `develop` → `main` | Merge `0845e9c` | Bastián |
+| Justificación GitFlow + fix permiso `mvnw` en CI | `docs/justificacion-gitflow` | PR #1 → `main` | Bastián |
+| Responder 404 al eliminar estudiante inexistente | `hotfix/manejo-estudiante-inexistente` | PR #2 → `main` | Bastián |
+| Llevar el hotfix de `main` a `develop` | `chore/sincronizar-main-en-develop` | PR #3 → `develop` | Bastián |
+| Contador de estudiantes (`GET /students/count`) | `feature/contar-estudiantes` | PR #4 → `develop` | Bastián |
+| Búsqueda por email (`GET /students/search/email`) | `feature/busqueda-estudiante-email` | PR #5 → `develop` | Bastián |
+| Corrección de guía y trazabilidad | `docs/corrige-guia-y-trazabilidad` | PR → `develop` | Bastián |
+
+Los tres primeros cambios se integraron con merge local, antes de que el equipo adoptara Pull Requests. Desde el PR #1 todo cambio entra por Pull Request y pasa por GitHub Actions antes del merge. El hotfix del PR #2 siguió GitFlow: se corrigió en `main` y luego se llevó a `develop` (PR #3) para que ambas ramas quedaran alineadas.
 
 ---
 
@@ -322,6 +341,40 @@ Se recomienda configurar **Branch Protection Rules** en GitHub para resguardar l
 
 ---
 
+## Declaración de uso de IA
+
+Herramienta utilizada: **Claude (Anthropic)**, a través de Claude Code en VS Code.
+
+Se usó para:
+- Diagnosticar el error del pipeline (el archivo `mvnw` no tenía permiso de ejecución) y corregirlo (PR #1).
+- Hacer el merge de `develop` en `main` y abrir Pull Requests.
+- Redactar un borrador de la sección "Justificación técnica de GitFlow" (PR #1).
+- Implementar la búsqueda por email y sus pruebas (PR #5).
+- Corregir inconsistencias entre el README, la guía de contribución y la plantilla de PR.
+
+Todo lo generado con IA se revisa en el Pull Request correspondiente antes de hacer el merge. Las reflexiones individuales se escribieron sin IA.
+
+Cita: Anthropic. (2026). *Claude* (versión Opus 5) [Modelo de lenguaje de gran tamaño]. https://claude.ai
+
+---
+
+## Conclusiones y reflexiones individuales
+
+> Cada integrante escribe su reflexión sin apoyo de IA, como exige la pauta.
+
+### Martín Gauna
+_Pendiente._
+<!-- Preguntas guía: ¿Qué aprendiste sobre GitFlow, Pull Requests o GitHub Actions? ¿Qué te costó más? ¿Qué aportaste al repositorio? ¿Qué harías distinto la próxima vez? -->
+
+### Bastián Garrido
+_Pendiente._
+<!-- Preguntas guía: ¿Qué aprendiste sobre GitFlow, Pull Requests o GitHub Actions? ¿Qué te costó más? ¿Qué aportaste al repositorio? ¿Qué harías distinto la próxima vez? -->
+
+### José Concha
+_Pendiente._
+<!-- Preguntas guía: ¿Qué aprendiste sobre GitFlow, Pull Requests o GitHub Actions? ¿Qué te costó más? ¿Qué aportaste al repositorio? ¿Qué harías distinto la próxima vez? -->
+
+---
 
 ## Autores
 
