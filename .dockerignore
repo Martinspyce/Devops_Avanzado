@@ -1,0 +1,21 @@
+# Control de versiones y CI
+.git
+.github
+.gitignore
+
+# Artefactos de build (se generan dentro del contenedor)
+target/
+
+# IDE / sistema operativo
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Documentación y archivos que no van a la imagen
+docs/
+*.md
+docker-compose*.yml
+.env
+.env.*
+!.env.example

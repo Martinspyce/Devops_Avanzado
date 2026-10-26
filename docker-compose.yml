@@ -1,0 +1,88 @@
+# ============================================================
+# Orquestación de Order Manager: API (Spring Boot) + PostgreSQL
+#
+#   docker compose up --build -d     levanta todo
+#   docker compose down -v           detiene y borra contenedores y datos
+#
+# Las variables se leen del archivo .env (ver .env.example);
+# si no existe, se usan los valores por defecto de desarrollo.
+# ============================================================
+name: order-manager
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: order-manager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-orderdb}
+      POSTGRES_USER: ${DB_USER:-orderuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-orderpass}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+    # Sin "ports": la base de datos solo es accesible desde la red interna
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-local}
+        VERSION: ${VERSION:-dev}
+    # En CI se despliega la imagen ya construida y escaneada (--no-build)
+    image: ${APP_IMAGE:-order-manager:local}
+    container_name: order-manager-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8098}:8098"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME:-orderdb}
+      DB_USER: ${DB_USER:-orderuser}
+      DB_PASSWORD: ${DB_PASSWORD:-orderpass}
+      GIT_COMMIT: ${GIT_COMMIT:-local}
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+    # Endurecimiento: sistema de archivos de solo lectura, sin privilegios extra
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: "1.0"
+        reservations:
+          memory: 384M
+          cpus: "0.5"
+
+networks:
+  backend:
+
+volumes:
+  pgdata:
