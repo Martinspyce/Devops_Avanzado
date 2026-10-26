@@ -166,8 +166,8 @@ El pipeline no necesita secretos ni cuentas externas: SonarQube se levanta dentr
 ## 11. Conclusiones y reflexiones individuales
 
 
-### Bastian Garrido — Trivy me ayuda a detectar vulnerabilidades y mejorar la seguridad de la aplicación.
+### Bastian Garrido — Aprendí que puedo detectar vulnerabilidades en las imágenes de Docker. Yo analicé las imágenes con Trivy. Me costó identificar cómo solucionar las vulnerabilidades encontradas.
 
-### Martin Gauna —  SonarQube me ayuda a mejorar la calidad del código y detectar errores.
+### Martin Gauna —  Aprendí que puedo detectar errores y mejorar la calidad del código. Yo ejecuté el análisis con SonarQube. Mejoraría la solución de los problemas detectados.
 
-### Jose Concha — Docker Compose me permite ejecutar la aplicación y la base de datos fácilmente.
+### Jose Concha — Aprendí que puedo ejecutar la aplicación y la base de datos con un solo comando. Yo configuré los servicios en Docker Compose. Me costó configurar correctamente los servicios.
