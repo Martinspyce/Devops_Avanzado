@@ -122,7 +122,6 @@ El pipeline no necesita secretos ni cuentas externas: SonarQube se levanta dentr
 
 ## 9. Declaración de uso de Inteligencia Artificial
 
-_(Revisar y ajustar con lo que realmente aplique al equipo.)_
 
 - **Herramienta:** Claude Code (Anthropic, modelo Claude Sonnet 5.5).
 - **Uso:** borrador de `Dockerfile`, `docker-compose.yml`, workflow de GitHub Actions, `dependabot.yml`, pruebas unitarias del dominio (`OrderTest`), análisis de vulnerabilidades con Trivy y redacción de las secciones descriptivas de este README. Los comandos se probaron localmente con Docker Desktop.
@@ -133,12 +132,42 @@ _(Revisar y ajustar con lo que realmente aplique al equipo.)_
 
 ## 10. Decisiones técnicas y justificación
 
-_(Sección a redactar por el equipo: por qué Docker Compose y no Kubernetes, por qué SonarQube, por qué Trivy, por qué esos umbrales, qué riesgos se aceptaron y por qué.)_
+### Decisión 1: Docker Compose
+- **Decisión:** Usamos Docker Compose para levantar la aplicación y la base de datos en contenedores.
+- **Problema que resolvía:** Los contenedores se ejecutan igual en cualquier máquina.
+- **Alternativa que descartamos:** Instalar y configurar cada servicio manualmente.
+- **Límite o costo:** Requiere aprender a configurar Docker Compose y consume recursos del equipo.
+
+### Decisión 2: Límites de CPU y memoria
+- **Decisión:** Limitamos la CPU y la memoria de cada contenedor.
+- **Problema que resolvía:** Sin límite, un contenedor puede consumir todos los recursos disponibles, y los recursos cuestan dinero.
+- **Alternativa que descartamos:** No poner límites.
+- **Límite o costo:** Si el límite es muy bajo, faltan recursos y el sistema se vuelve lento.
+
+### Decisión 3: Dockerfile multi-stage
+- **Decisión:** Usamos un Dockerfile multi-stage.
+- **Problema que resolvía:** Obtener una imagen final más liviana.
+- **Alternativa que descartamos:** Usar un Dockerfile de una sola etapa, que incluye herramientas y archivos innecesarios en la imagen final.
+- **Límite o costo:** La configuración es más compleja y requiere mantener varias etapas de construcción.
+
+### Decisión 4: SonarQube
+- **Decisión:** Usamos SonarQube para analizar el código.
+- **Problema que resolvía:** Detecta problemas en el código antes de desplegar.
+- **Alternativa que descartamos:** Revisar el código manualmente sin utilizar herramientas de análisis automático.
+- **Límite o costo:** Requiere configuración y recursos adicionales, y puede generar advertencias que necesitan revisión manual.
+
+### Decisión 5: Trivy
+- **Decisión:** Usamos Trivy para analizar las imágenes de Docker y detectar vulnerabilidades de seguridad.
+- **Problema que resolvía:** Identificar vulnerabilidades en las dependencias, paquetes y componentes de las imágenes antes de desplegar la aplicación.
+- **Alternativa que descartamos:** No realizar análisis de vulnerabilidades o revisarlas manualmente.
+- **Límite o costo:** Puede generar falsos positivos y requiere mantener actualizada su base de datos de vulnerabilidades.
+
 
 ## 11. Conclusiones y reflexiones individuales
 
-_(Cada integrante redacta su reflexión personal, sin apoyo de IA: qué aprendió y cuál fue su contribución.)_
 
-### Integrante 1 — _nombre_
+### Bastian Garrido — Trivy me ayuda a detectar vulnerabilidades y mejorar la seguridad de la aplicación.
 
-### Integrante 2 — _nombre_
+### Martin Gauna —  SonarQube me ayuda a mejorar la calidad del código y detectar errores.
+
+### Jose Concha — Docker Compose me permite ejecutar la aplicación y la base de datos fácilmente.
