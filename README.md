@@ -4,7 +4,7 @@ API REST de pedidos de e-commerce (Spring Boot 3.5, Java 17, PostgreSQL) con un 
 CI/CD completo en GitHub Actions: pruebas automatizadas, análisis de calidad y seguridad,
 contenedores, despliegue automático en un entorno simulado y orquestación con Docker Compose.
 
-**Integrantes:** _(completar)_ · **Docente:** Cristián R. Araya Salazar
+**Integrantes:** Bastian Garrido - Jose Concha - Martin Gauna · **Docente:** Cristián R. Araya Salazar
 
 ---
 
