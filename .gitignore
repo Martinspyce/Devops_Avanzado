@@ -1,14 +1,33 @@
 # Maven
+HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# IDE
+# IDEs
 .idea/
+*.iws
 *.iml
+*.ipr
 .vscode/
 .settings/
 .classpath
 .project
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
 # Sistema operativo
 .DS_Store
@@ -17,10 +36,15 @@ Thumbs.db
 # Logs
 *.log
 
-# Secretos
+# Secretos y credenciales
 .env
 .env.local
 *.env
+Wallet_*/
+*.p12
+*.pem
+*.sso
+application-secrets.properties
 
 # Docker
 docker-compose.override.yml
