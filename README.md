@@ -2,6 +2,19 @@
 
 > **EP3:** la continuación de este proyecto está documentada en [README_EP3.md](README_EP3.md), sobre la rama `ep3-observabilidad` basada en `ep2`.
 
+## Navegación rápida de la EP3
+
+Para revisar la entrega de observabilidad, el punto de entrada es **[README_EP3.md](README_EP3.md)**. Ahí se explica qué debe revisar el profesor y cómo reproducir la ejecución local, el pipeline y AWS Academy.
+
+| Qué revisar | Ubicación |
+|---|---|
+| Pipeline activo y puertas CI/CD | [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) |
+| Auditoría IE5/IE6 | [`scripts/audit-compliance.sh`](scripts/audit-compliance.sh) |
+| Despliegue EKS con PVC | [`k8s/`](k8s/) |
+| Despliegue compatible con AWS Academy | [`k8s/academy/`](k8s/academy/) |
+| Dashboard de Grafana | [`monitoring/grafana/dashboards/order-manager-ep3.json`](monitoring/grafana/dashboards/order-manager-ep3.json) |
+| Evidencia y comandos de verificación | [sección AWS de README_EP3.md](README_EP3.md#despliegue-en-aws-academy-con-eks) |
+
 Microservicio REST en **Java 17 + Spring Boot 3** para la gestión de estudiantes (CRUD). Incluye tests unitarios, validaciones Jakarta, persistencia con Spring Data JPA y H2 en memoria, contenedores Docker y pipeline automatizado con GitHub Actions.
 
 Este repositorio corresponde a la **Evaluación Parcial N°1 de Ingeniería DevOps (DOY0101)** — Nivel Avanzado.
@@ -41,7 +54,8 @@ Requiere **JDK 17** y Maven (o usar el wrapper incluido `./mvnw` / `.\mvnw.cmd`)
 bdget/
 ├── .github/
 │   ├── workflows/
-│   │   └── main.yml               → Workflow CI/CD en GitHub Actions
+│   │   ├── ci-cd.yml              → Workflow activo de la EP3
+│   │   └── main.yml               → Workflow legado de EP1/EP2
 │   └── PULL_REQUEST_TEMPLATE.md   → Plantilla estandarizada para Pull Requests
 ├── src/
 │   ├── main/
@@ -191,7 +205,7 @@ Los Pull Requests son el mecanismo central de control de calidad y colaboración
 
 ##  Automatización y Pipeline CI/CD
 
-El repositorio cuenta con un workflow de automatización en `.github/workflows/main.yml` configurado con GitHub Actions.
+El workflow activo de esta entrega es `.github/workflows/ci-cd.yml`. El archivo `.github/workflows/main.yml` se conserva como referencia del pipeline legado de EP1/EP2 y no es el flujo que documenta la EP3.
 
 ### Diagrama del Pipeline:
 
@@ -313,7 +327,7 @@ Se recomienda configurar **Branch Protection Rules** en GitHub para resguardar l
 1. Ir a **GitHub** → **Settings** → **Branches** → **Add branch protection rule**.
 2. **Branch name pattern:** `main`
 3. Marcar **Require a pull request before merging**.
-4. Marcar **Require status checks to pass before merging** (seleccionar los jobs de `main.yml`).
+4. Marcar **Require status checks to pass before merging** (seleccionar los jobs de `ci-cd.yml`: `Pruebas y cobertura`, `Auditoría de cumplimiento`, `Análisis SonarQube` e `Imagen Docker y Trivy`).
 5. Marcar **Require conversation resolution before merging**.
 6. Marcar **Do not allow bypassing the above settings** / **Block force pushes**.
 
