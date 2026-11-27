@@ -100,7 +100,7 @@ services:
       - backend
 
   pushgateway:
-    image: prom/pushgateway:v1.11.1
+    image: prom/pushgateway:v1.11.5
     container_name: order-manager-pushgateway
     restart: unless-stopped
     ports:
