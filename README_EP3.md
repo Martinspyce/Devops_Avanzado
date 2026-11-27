@@ -2,6 +2,18 @@
 
 Implementación de la Evaluación Parcial N°3 de DOY0101 sobre el microservicio Order Manager. Esta rama extiende la solución de la EP2 con métricas, dashboards, auditoría automatizada y manifiestos Kubernetes preparados para un despliegue en AWS Academy.
 
+## Guía rápida para revisar la entrega
+
+La entrega se encuentra en la rama `ep3-observabilidad` y se revisa desde estos puntos:
+
+1. **Código y observabilidad:** Actuator/Micrometer en `pom.xml` y `src/main/resources/application-docker.properties`.
+2. **Pipeline activo:** [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml). Sus puertas son `Pruebas y cobertura`, `Auditoría de cumplimiento`, `Análisis SonarQube` e `Imagen Docker y Trivy`.
+3. **Auditoría:** [`scripts/audit-compliance.sh`](scripts/audit-compliance.sh), ejecutable localmente.
+4. **Dashboard:** [`monitoring/grafana/dashboards/order-manager-ep3.json`](monitoring/grafana/dashboards/order-manager-ep3.json), provisionado en la carpeta `DevOps EP3`.
+5. **Kubernetes:** [`k8s/`](k8s/) contiene el despliegue persistente para un EKS con EBS CSI; [`k8s/academy/`](k8s/academy/) contiene el perfil reproducible para el laboratorio AWS Academy.
+
+El Pull Request de la EP3 es [#9](https://github.com/Martinspyce/Devops_Avanzado/pull/9). No se deben subir contraseñas, tokens ni archivos `.env`; el secreto de PostgreSQL se crea directamente en el clúster.
+
 ## Alcance implementado
 
 | Indicador | Evidencia en el repositorio | Resultado esperado |
@@ -70,11 +82,15 @@ El despliegue solo depende de resultados aprobados:
 
 ## Despliegue en AWS Academy con EKS
 
-El laboratorio AWS es necesario solamente para obtener la evidencia de un entorno cloud real. Los manifiestos no contienen credenciales ni secretos; antes de aplicarlos hay que crear el secreto en el clúster:
+El laboratorio AWS se utilizó para obtener evidencia de un entorno cloud real. Los manifiestos no contienen credenciales ni secretos; antes de aplicarlos hay que crear el secreto en el clúster.
+
+### Perfil recomendado para AWS Academy
+
+El lab puede entregar un nodo pequeño y no siempre incluye el controlador EBS CSI. Por eso el perfil `k8s/academy/` usa una sola réplica de la aplicación, recursos reducidos y un `emptyDir` para PostgreSQL. Es reproducible, pero **los datos de PostgreSQL son efímeros** y se pierden al recrear el pod. Para persistencia se debe usar el perfil base con EBS CSI, descrito más abajo.
 
 ```bash
 aws sts get-caller-identity
-aws eks update-kubeconfig --region <REGION> --name <CLUSTER_NAME>
+aws eks update-kubeconfig --region us-east-1 --name ep3-observabilidad-v2
 
 kubectl apply -f k8s/namespace.yaml
 kubectl -n order-manager create secret generic order-manager-db-secret \
@@ -82,14 +98,45 @@ kubectl -n order-manager create secret generic order-manager-db-secret \
   --from-literal=password='<CLAVE_NO_SUBIR_AL_REPO>' \
   --dry-run=client -o yaml | kubectl apply -f -
 
-kubectl apply -k k8s/
-kubectl -n order-manager rollout status statefulset/order-manager-db --timeout=180s
+kubectl apply -k k8s/academy/
 kubectl -n order-manager rollout status deployment/order-manager --timeout=180s
+kubectl -n order-manager rollout status deployment/order-manager-db --timeout=180s
 kubectl -n order-manager get pods,svc
 kubectl -n order-manager get svc order-manager
 ```
 
-El Service `LoadBalancer` entrega la URL pública de la API cuando AWS termina de provisionar el balanceador. Para instalar Prometheus y Grafana en el clúster se puede usar `kube-prometheus-stack` en el lab y conservar el mismo dashboard exportado en `monitoring/grafana/dashboards/`. El Service de la aplicación ya incluye las anotaciones de scraping de Prometheus.
+El Service `LoadBalancer` entrega la URL pública de la API cuando AWS termina de provisionar el balanceador. El Service de la aplicación incluye las anotaciones de scraping de Prometheus.
+
+### Evidencia AWS verificada en esta entrega
+
+La ejecución del laboratorio se verificó en `us-east-1`, clúster `ep3-observabilidad-v2`:
+
+```bash
+kubectl -n order-manager get pods
+# order-manager-*       1/1 Running
+# order-manager-db-*    1/1 Running
+
+kubectl -n order-manager get svc order-manager
+curl http://<EXTERNAL-IP>/actuator/health
+# {"status":"UP","groups":["liveness","readiness"]}
+
+curl http://<EXTERNAL-IP>/actuator/prometheus | head
+# HELP application_ready_time_seconds ...
+```
+
+Durante la sesión, AWS entregó temporalmente este endpoint: `http://a2460f12cab904d3388ce4849b1f4d64-1025548174.us-east-1.elb.amazonaws.com`. El hostname puede cambiar cuando el laboratorio expire y se cree otro Load Balancer; por eso el comando `kubectl get svc` es la fuente de verdad.
+
+### Perfil persistente para EKS con EBS CSI
+
+Si el clúster tiene instalado y autorizado el controlador EBS CSI, se puede usar el perfil base:
+
+```bash
+kubectl apply -k k8s/
+kubectl -n order-manager rollout status statefulset/order-manager-db --timeout=180s
+kubectl -n order-manager rollout status deployment/order-manager --timeout=180s
+```
+
+Este perfil usa `k8s/postgres.yaml`, un `StatefulSet` y un PVC `1Gi` con la StorageClass `gp2`. En AWS Academy se debe confirmar primero que exista un provisionador `ebs.csi.aws.com`; si no existe, usar `k8s/academy/`.
 
 Para usar la imagen publicada en GHCR, el paquete debe ser público o el clúster debe tener un `imagePullSecret`. En una demostración controlada, también se puede reemplazar `image` en `k8s/app.yaml` por el tag inmutable de la ejecución, por ejemplo `ghcr.io/martinspyce/devops_avanzado:<commit-corto>`.
 
@@ -104,9 +151,9 @@ Configurar en `Settings → Branches → Branch protection rules` para `main`, `
 
 Estas reglas son una configuración del repositorio remoto, por lo que deben verificarse en GitHub y documentarse con una captura como evidencia final.
 
-## Evidencias que faltan ejecutar en el entorno del estudiante
+## Evidencias para entregar
 
-El código deja preparada la solución, pero las siguientes evidencias dependen de los servicios disponibles en cada entorno y deben capturarse al ejecutar:
+Las evidencias que el profesor debe revisar o capturar son:
 
 1. Resultado verde del workflow en GitHub Actions.
 2. Dashboard de Grafana con datos de la ejecución y tráfico de la API.
@@ -114,4 +161,4 @@ El código deja preparada la solución, pero las siguientes evidencias dependen 
 4. Prueba negativa: introducir una vulnerabilidad bloqueante o bajar la cobertura para mostrar que el pipeline se detiene.
 5. Configuración de branch protection en GitHub.
 
-No se deben presentar como ejecutadas hasta obtener esas capturas del lab y del repositorio remoto.
+La evidencia AWS de salud y métricas ya fue verificada contra el Load Balancer indicado arriba. El dashboard de Grafana y la protección de ramas deben documentarse con capturas desde sus respectivas interfaces si la rúbrica las exige; el repositorio contiene los archivos necesarios para reproducirlas.

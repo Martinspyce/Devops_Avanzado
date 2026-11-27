@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-manager
+spec:
+  replicas: 1
+  template:
+    spec:
+      # AWS Academy puede usar runtimes que no resuelven usuarios nombrados
+      # de la imagen. El Dockerfile principal usa UID 10001; esta excepción
+      # mantiene reproducible el lab con la imagen latest ya publicada.
+      securityContext:
+        runAsNonRoot: false
+      containers:
+        - name: order-manager
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

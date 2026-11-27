@@ -43,11 +43,12 @@ LABEL org.opencontainers.image.title="order-manager" \
       org.opencontainers.image.revision="${GIT_COMMIT}" \
       org.opencontainers.image.version="${VERSION}"
 
-RUN groupadd --system app && useradd --system --gid app --no-create-home app
+RUN groupadd --system --gid 10001 app && useradd --system --uid 10001 --gid app --no-create-home app
 WORKDIR /app
 COPY --from=compile --chown=app:app /app/target/*.jar /app/app.jar
 
-USER app
+# UID numérico: Kubernetes puede verificar correctamente runAsNonRoot=true.
+USER 10001:10001
 ENV GIT_COMMIT=${GIT_COMMIT} \
     JAVA_OPTS="-XX:MaxRAMPercentage=75"
 

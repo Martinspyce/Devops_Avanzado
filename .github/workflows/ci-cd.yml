@@ -5,9 +5,9 @@ name: CI/CD
 # calidad y seguridad anteriores pasan.
 on:
   push:
-    branches: [main, develop, ep2]
+    branches: [main, develop, ep2, ep3-observabilidad]
   pull_request:
-    branches: [main, develop, ep2]
+    branches: [main, develop, ep2, ep3-observabilidad]
   workflow_dispatch:
 
 concurrency:

@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-manager
+  labels:
+    app: order-manager
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: order-manager
+  template:
+    metadata:
+      labels:
+        app: order-manager
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      containers:
+        - name: order-manager
+          image: ghcr.io/martinspyce/devops_avanzado:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8098
+          envFrom:
+            - configMapRef:
+                name: order-manager-config
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: order-manager-db-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: order-manager-db-secret
+                  key: password
+            - name: GIT_COMMIT
+              valueFrom:
+                configMapKeyRef:
+                  name: order-manager-release
+                  key: GIT_COMMIT
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+            initialDelaySeconds: 40
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 4
+          resources:
+            requests:
+              cpu: 250m
+              memory: 384Mi
+            limits:
+              cpu: "1"
+              memory: 768Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-manager
+  labels:
+    app: order-manager
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /actuator/prometheus
+    prometheus.io/port: "8098"
+spec:
+  selector:
+    app: order-manager
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  type: LoadBalancer
