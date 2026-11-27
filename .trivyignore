@@ -1,0 +1,9 @@
+# Excepciones de seguridad ACEPTADAS Y DOCUMENTADAS (gobernanza).
+# Cada línea debe tener motivo y fecha de revisión. Revisar al migrar a Spring Boot 4 / Spring Framework 7.
+#
+# CVE-2026-47884 (spring-webmvc, XsltView) y CVE-2026-47890 (spring-webmvc, SSE con vistas):
+#   el parche solo existe en Spring Framework 7.0.9; la rama 6.2.x (la última es 6.2.19) no lo tiene.
+#   La API no usa XsltView ni renderiza vistas (solo @RestController con JSON), por lo que la
+#   funcionalidad vulnerable no es alcanzable. Revisar: 2026-12-01.
+CVE-2026-47884
+CVE-2026-47890

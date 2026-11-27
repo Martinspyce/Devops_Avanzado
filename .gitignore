@@ -1,33 +1,25 @@
+# Maven
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### Seguridad — nunca commitear credenciales ###
-Wallet_*/
-*.p12
-*.pem
-*.sso
-application-secrets.properties
-.env
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
+# IDEs
+.idea/
 *.iws
 *.iml
 *.ipr
+.vscode/
+.settings/
+.classpath
+.project
+.apt_generated
+.factorypath
+.springBeans
+.sts4-cache
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -37,5 +29,22 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secretos y credenciales
+.env
+.env.local
+*.env
+Wallet_*/
+*.p12
+*.pem
+*.sso
+application-secrets.properties
+
+# Docker
+docker-compose.override.yml

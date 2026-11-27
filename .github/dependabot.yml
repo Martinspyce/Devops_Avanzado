@@ -1,0 +1,34 @@
+# Escaneo continuo de dependencias: Dependabot abre un PR cuando hay
+# versiones nuevas o parches de seguridad. Cada PR pasa por el mismo
+# pipeline (pruebas, SonarCloud, Trivy) antes de poder fusionarse.
+version: 2
+updates:
+  # Librerías Java (pom.xml)
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "java"]
+
+  # Imágenes base del Dockerfile
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "docker"]
+
+  # Imágenes del docker-compose.yml (PostgreSQL)
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "docker"]
+
+  # Versiones de las Actions usadas en el pipeline
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["dependencies", "ci"]

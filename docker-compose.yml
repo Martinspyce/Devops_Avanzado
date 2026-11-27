@@ -1,0 +1,164 @@
+# ============================================================
+# Orquestación de Order Manager: API (Spring Boot) + PostgreSQL
+#
+#   docker compose up --build -d     levanta todo
+#   docker compose down -v           detiene y borra contenedores y datos
+#
+# Las variables se leen del archivo .env (ver .env.example);
+# si no existe, se usan los valores por defecto de desarrollo.
+# ============================================================
+name: order-manager
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: order-manager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-orderdb}
+      POSTGRES_USER: ${DB_USER:-orderuser}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-orderpass}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+    # Sin "ports": la base de datos solo es accesible desde la red interna
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "0.5"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prod
+      args:
+        GIT_COMMIT: ${GIT_COMMIT:-local}
+        VERSION: ${VERSION:-dev}
+    # En CI se despliega la imagen ya construida y escaneada (--no-build)
+    image: ${APP_IMAGE:-order-manager:local}
+    container_name: order-manager-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8098}:8098"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_NAME: ${DB_NAME:-orderdb}
+      DB_USER: ${DB_USER:-orderuser}
+      DB_PASSWORD: ${DB_PASSWORD:-orderpass}
+      GIT_COMMIT: ${GIT_COMMIT:-local}
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+    # Endurecimiento: sistema de archivos de solo lectura, sin privilegios extra
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: "1.0"
+        reservations:
+          memory: 384M
+          cpus: "0.5"
+
+  # Prometheus recopila las métricas de Spring Boot y las métricas de CI
+  # publicadas en Pushgateway.
+  prometheus:
+    image: prom/prometheus:v3.8.1
+    container_name: order-manager-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.enable-lifecycle"
+    networks:
+      - backend
+
+  pushgateway:
+    image: prom/pushgateway:v1.11.1
+    container_name: order-manager-pushgateway
+    restart: unless-stopped
+    ports:
+      - "9091:9091"
+    networks:
+      - backend
+
+  loki:
+    image: grafana/loki:3.5.0
+    container_name: order-manager-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ./monitoring/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+    networks:
+      - backend
+
+  promtail:
+    image: grafana/promtail:3.5.0
+    container_name: order-manager-promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./monitoring/promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:12.3.0
+    container_name: order-manager-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  pgdata:
+  prometheus_data:
+  grafana_data:
+  loki_data:
