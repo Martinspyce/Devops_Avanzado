@@ -151,14 +151,4 @@ Configurar en `Settings → Branches → Branch protection rules` para `main`, `
 
 Estas reglas son una configuración del repositorio remoto, por lo que deben verificarse en GitHub y documentarse con una captura como evidencia final.
 
-## Evidencias para entregar
-
-Las evidencias que el profesor debe revisar o capturar son:
-
-1. Resultado verde del workflow en GitHub Actions.
-2. Dashboard de Grafana con datos de la ejecución y tráfico de la API.
-3. `kubectl get pods,svc` mostrando los recursos en EKS.
-4. Prueba negativa: introducir una vulnerabilidad bloqueante o bajar la cobertura para mostrar que el pipeline se detiene.
-5. Configuración de branch protection en GitHub.
-
 La evidencia AWS de salud y métricas ya fue verificada contra el Load Balancer indicado arriba. El dashboard de Grafana y la protección de ramas deben documentarse con capturas desde sus respectivas interfaces si la rúbrica las exige; el repositorio contiene los archivos necesarios para reproducirlas.
