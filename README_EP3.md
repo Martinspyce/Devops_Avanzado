@@ -11,6 +11,7 @@ La entrega se encuentra en la rama `ep3-observabilidad` y se revisa desde estos 
 3. **Auditoría:** [`scripts/audit-compliance.sh`](scripts/audit-compliance.sh), ejecutable localmente.
 4. **Dashboard:** [`monitoring/grafana/dashboards/order-manager-ep3.json`](monitoring/grafana/dashboards/order-manager-ep3.json), provisionado en la carpeta `DevOps EP3`.
 5. **Kubernetes:** [`k8s/`](k8s/) contiene el despliegue persistente para un EKS con EBS CSI; [`k8s/academy/`](k8s/academy/) contiene el perfil reproducible para el laboratorio AWS Academy.
+6. **Capturas verificables:** [`docs/evidence/EP3_EVIDENCIAS.md`](docs/evidence/EP3_EVIDENCIAS.md) enlaza capturas del dashboard, logs, errores y targets de Prometheus.
 
 El Pull Request de la EP3 es [#9](https://github.com/Martinspyce/Devops_Avanzado/pull/9). No se deben subir contraseñas, tokens ni archivos `.env`; el secreto de PostgreSQL se crea directamente en el clúster.
 
@@ -55,6 +56,10 @@ curl http://localhost:8098/api/orders
 ```
 
 El dashboard se provisiona automáticamente en la carpeta **DevOps EP3** de Grafana. Las métricas de cobertura y tiempo de despliegue aparecen después de una ejecución del workflow, porque se publican en Pushgateway desde el job `deploy`.
+
+### Capturas de la validación local
+
+La validación local del stack Compose se documenta en [`docs/evidence/EP3_EVIDENCIAS.md`](docs/evidence/EP3_EVIDENCIAS.md). Las imágenes muestran el dashboard provisionado, los logs recolectados por Loki/Promtail, los errores HTTP observados y los dos targets de Prometheus en estado `UP`.
 
 ## Flujo CI/CD y puertas de control
 
