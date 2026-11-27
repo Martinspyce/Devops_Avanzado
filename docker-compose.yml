@@ -84,7 +84,7 @@ services:
   # Prometheus recopila las métricas de Spring Boot y las métricas de CI
   # publicadas en Pushgateway.
   prometheus:
-    image: prom/prometheus:v3.8.1
+    image: prom/prometheus:v3.16.0
     container_name: order-manager-prometheus
     restart: unless-stopped
     ports:
