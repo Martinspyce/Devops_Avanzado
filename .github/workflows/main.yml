@@ -51,7 +51,7 @@ jobs:
         run: ./mvnw clean package -DskipTests
 
       - name: Subir artefacto JAR a GitHub Actions
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: bdget-jar-${{ github.sha }}
           path: target/*.jar
