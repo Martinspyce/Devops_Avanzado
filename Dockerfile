@@ -5,7 +5,7 @@
 # Solo copia el pom.xml para que Docker reutilice esta capa
 # (y el caché de Maven) mientras las dependencias no cambien.
 # ============================================================
-FROM maven:3.9-eclipse-temurin-17 AS dependencies
+FROM maven:3.9-eclipse-temurin-26 AS dependencies
 WORKDIR /app
 COPY pom.xml .
 RUN mvn -B -q dependency:go-offline
