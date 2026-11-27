@@ -33,7 +33,7 @@ RUN mvn -B package -DskipTests
 # (Se usa noble y no alpine porque eclipse-temurin:17-jre-alpine
 # no publica imagen para arm64, p. ej. Mac con Apple Silicon.)
 # ============================================================
-FROM eclipse-temurin:17-jre-noble AS prod
+FROM eclipse-temurin:25-jre-noble AS prod
 
 # Trazabilidad: commit y versión que originaron esta imagen
 ARG GIT_COMMIT=unknown
