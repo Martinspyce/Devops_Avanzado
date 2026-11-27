@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-manager-release
+  namespace: order-manager
+data:
+  GIT_COMMIT: manual

@@ -1,0 +1,58 @@
+{
+  "annotations": {"list": []},
+  "editable": false,
+  "graphTooltip": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Tiempo de despliegue (s)",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+      "targets": [{"expr": "ci_deployment_duration_seconds", "legendFormat": "{{branch}} / {{commit}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "s", "color": {"mode": "palette-classic"}}, "overrides": []}
+    },
+    {
+      "type": "gauge",
+      "title": "Cobertura de pruebas (%)",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+      "targets": [{"expr": "ci_test_coverage_percent", "legendFormat": "{{branch}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"min": 0, "max": 100, "unit": "percent", "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 70}, {"color": "green", "value": 80}]}}, "overrides": []}
+    },
+    {
+      "type": "timeseries",
+      "title": "Uso de CPU de la JVM",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+      "targets": [{"expr": "process_cpu_usage{application=\"order-manager\"} * 100", "legendFormat": "CPU %", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percent", "min": 0, "max": 100}, "overrides": []}
+    },
+    {
+      "type": "timeseries",
+      "title": "Memoria heap usada",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+      "targets": [{"expr": "jvm_memory_used_bytes{application=\"order-manager\",area=\"heap\"}", "legendFormat": "{{id}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "bytes(IEC)"}, "overrides": []}
+    },
+    {
+      "type": "timeseries",
+      "title": "Errores HTTP registrados",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
+      "targets": [{"expr": "sum by (status) (rate(http_server_requests_seconds_count{application=\"order-manager\",status=~\"4..|5..\"}[5m]))", "legendFormat": "HTTP {{status}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "reqps"}, "overrides": []}
+    },
+    {
+      "type": "logs",
+      "title": "Logs de la aplicación",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 24},
+      "datasource": {"type": "loki", "uid": "loki"},
+      "targets": [{"expr": "{container=\"order-manager-app\"}", "refId": "A"}],
+      "options": {"showTime": true, "showLabels": true, "sortOrder": "Descending", "wrapLines": true}
+    }
+  ],
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["ep3", "devops", "observabilidad"],
+  "templating": {"list": []},
+  "time": {"from": "now-6h", "to": "now"},
+  "title": "Order Manager · EP3 Observabilidad",
+  "uid": "order-manager-ep3",
+  "version": 1
+}

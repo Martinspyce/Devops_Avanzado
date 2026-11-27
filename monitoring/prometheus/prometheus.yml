@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: order-manager
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["app:8098"]
+        labels:
+          service: order-manager
+          environment: local
+
+  # GitHub Actions publica aquí la cobertura y el tiempo de despliegue.
+  - job_name: github-actions
+    honor_labels: true
+    static_configs:
+      - targets: ["pushgateway:9091"]

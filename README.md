@@ -1,5 +1,7 @@
 # bdget 🎓 — Microservicio REST para Gestión de Estudiantes
 
+> **EP3:** la continuación de este proyecto está documentada en [README_EP3.md](README_EP3.md), sobre la rama `ep3-observabilidad` basada en `ep2`.
+
 Microservicio REST en **Java 17 + Spring Boot 3** para la gestión de estudiantes (CRUD). Incluye tests unitarios, validaciones Jakarta, persistencia con Spring Data JPA y H2 en memoria, contenedores Docker y pipeline automatizado con GitHub Actions.
 
 Este repositorio corresponde a la **Evaluación Parcial N°1 de Ingeniería DevOps (DOY0101)** — Nivel Avanzado.
