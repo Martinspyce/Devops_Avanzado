@@ -122,7 +122,7 @@ services:
       - backend
 
   promtail:
-    image: grafana/promtail:3.5.0
+    image: grafana/promtail:3.6.8
     container_name: order-manager-promtail
     restart: unless-stopped
     command: -config.file=/etc/promtail/promtail-config.yml
